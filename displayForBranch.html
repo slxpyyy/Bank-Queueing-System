@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="refresh" content="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Welcome to the UTNG!</title>
+</head>
+<body>
+    <main>
+      <header><h1><b style="font-size: 1.5em">NOMONEY BANK</b> .{{title}}</h1></header>
+        <div class="callingForCounter">
+            <h2>NOW</h2>
+            <h3 id = "Serving1st">-</h3>
+            <p>Please Go To Counter <b id = "Counter1st" style="font-size: 1.2em">-</b></p>
+        </div>
+        <div class="displayForBranch">
+            <h1 style = "font-size:3em;margin-top: 0.6em;margin-bottom: -0.5em;color:#696969">Waiting List</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Business</th>
+                        <th>Private</th>
+                        <th>Senior</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td id = "B_1">-</td>
+                        <td id = "P_1">-</td>
+                        <td id = "S_1">-</td>
+                    </tr>
+                    <tr>
+                        <td id = "B_2">-</td>
+                        <td id = "P_2">-</td>
+                        <td id = "S_2">-</td>
+                    </tr>
+                    <tr>
+                        <td id = "B_3">-</td>
+                        <td id = "P_3">-</td>
+                        <td id = "S_3">-</td>
+                    </tr>
+                    <tr>
+                        <td id = "B_4">-</td>
+                        <td id = "P_4">-</td>
+                        <td id = "S_4">-</td>
+                    </tr>
+                    <tr>
+                        <td id = "B_5">-</td>
+                        <td id = "P_5">-</td>
+                        <td id = "S_5">-</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="callingForCounter">
+            <h2>NOW</h2>
+            <h3  id = "Serving2nd">-</h3>
+            <p>Please Go To Counter <b id = "Counter2nd" style="font-size: 1.2em">-</b></p>
+        </div>
+        <div class="callingForCounter">
+            <h2>NOW</h2>
+            <h3  id = "Serving3rd">-</h3>
+            <p>Please Go To Counter <b id = "Counter3rd" style="font-size: 1.2em">-</b></p>
+        </div>
+
+    </main>
+    <footer>NOMONEY BANK &copy; - No Money · No Worries </footer    >
+</body>
+    <script>
+        var curWwwPath = window.document.location.href;
+        var pathName = window.document.location.pathname;
+        var localhostPath=curWwwPath.substring(0, curWwwPath.indexOf(pathName));
+        var projectName = pathName.substring(0,pathName.substr(1).indexOf('/')+2);
+        var currentCounterID = curWwwPath.slice(-1)
+        var apiForShowInfo = projectName+currentCounterID+"/nowserving"
+        console.log(apiForShowInfo)
+        let xhr = new XMLHttpRequest()//具体实现ajax的一个构造函数，方法
+        xhr.open("GET",apiForShowInfo)
+        xhr.send()
+
+        xhr.onreadystatechange = function(){
+            responseJson = JSON.parse(xhr.responseText)
+
+            if(responseJson.toserve.biztoserve[0] == ' '){B_1.innerHTML = "-"}else{B_1.innerHTML = responseJson.toserve.biztoserve[0]};
+            if(responseJson.toserve.biztoserve[1] == ' '){B_2.innerHTML = "-"}else{B_2.innerHTML = responseJson.toserve.biztoserve[1]};
+            if(responseJson.toserve.biztoserve[2] == ' '){B_3.innerHTML = "-"}else{B_3.innerHTML = responseJson.toserve.biztoserve[2]};
+            if(responseJson.toserve.biztoserve[3] == ' '){B_4.innerHTML = "-"}else{B_4.innerHTML = responseJson.toserve.biztoserve[3]};
+            if(responseJson.toserve.biztoserve[4] == ' '){B_5.innerHTML = "-"}else{B_5.innerHTML = responseJson.toserve.biztoserve[4]};
+            if(responseJson.toserve.pritoserve[0] == ' '){P_1.innerHTML = "-"}else{P_1.innerHTML = responseJson.toserve.pritoserve[0]};
+            if(responseJson.toserve.pritoserve[1] == ' '){P_2.innerHTML = "-"}else{P_2.innerHTML = responseJson.toserve.pritoserve[1]};
+            if(responseJson.toserve.pritoserve[2] == ' '){P_3.innerHTML = "-"}else{P_3.innerHTML = responseJson.toserve.pritoserve[2]};
+            if(responseJson.toserve.pritoserve[3] == ' '){P_4.innerHTML = "-"}else{P_4.innerHTML = responseJson.toserve.pritoserve[3]};
+            if(responseJson.toserve.pritoserve[4] == ' '){P_5.innerHTML = "-"}else{P_5.innerHTML = responseJson.toserve.pritoserve[4]};
+            if(responseJson.toserve.sentoserve[0] == ' '){S_1.innerHTML = "-"}else{S_1.innerHTML = responseJson.toserve.sentoserve[0]};
+            if(responseJson.toserve.sentoserve[1] == ' '){S_2.innerHTML = "-"}else{S_2.innerHTML = responseJson.toserve.sentoserve[1]};
+            if(responseJson.toserve.sentoserve[2] == ' '){S_3.innerHTML = "-"}else{S_3.innerHTML = responseJson.toserve.sentoserve[2]};
+            if(responseJson.toserve.sentoserve[3] == ' '){S_4.innerHTML = "-"}else{S_4.innerHTML = responseJson.toserve.sentoserve[3]};
+            if(responseJson.toserve.sentoserve[4] == ' '){S_5.innerHTML = "-"}else{S_5.innerHTML = responseJson.toserve.sentoserve[4]};
+
+            if(responseJson.nowserve[2].servenumber == ' '){Serving1st.innerHTML = "-"}else{Serving1st.innerHTML = responseJson.nowserve[2].servenumber};
+            if(responseJson.nowserve[1].servenumber == ' '){Serving2nd.innerHTML = "-"}else{Serving2nd.innerHTML = responseJson.nowserve[1].servenumber};
+            if(responseJson.nowserve[0].servenumber == ' '){Serving3rd.innerHTML = "-"}else{Serving3rd.innerHTML = responseJson.nowserve[0].servenumber};
+
+            if(responseJson.nowserve[2].counterID == ' '){Counter1st.innerHTML = "-"}else{Counter1st.innerHTML = responseJson.nowserve[2].counterID};
+            if(responseJson.nowserve[1].counterID == ' '){Counter2nd.innerHTML = "-"}else{Counter2nd.innerHTML = responseJson.nowserve[1].counterID};
+            if(responseJson.nowserve[0].counterID == ' '){Counter3rd.innerHTML = "-"}else{Counter3rd.innerHTML = responseJson.nowserve[0].counterID};
+
+
+        }
+        // show senior queue
+        // window.addEventListener("load", function() {
+        //
+        //     fetch(apiForShowInfo)
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             // count_Num = Object.keys(data).length
+        //             // document.getElementById("SeniorQueue").innerHTML = JSON.stringify(count_Num);
+        //             console.log("000"+data)
+        //           });
+        // });
+
+    </script>
+</html>

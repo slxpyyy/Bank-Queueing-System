@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="refresh" content="6">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Welcome to OurBank!</title>
+</head>
+<body>
+    <main>
+      <header><h1><b style="font-size: 1.5em">NOMONEY BANK</b> . {{title}} Branch</h1></header>
+        <section class="display">
+            <h1 id = "SuccessOrNot"></h1>
+            <h1 class="headtitle">-- Your Ticket --</h1>
+            <h1 class="password displayTicket" id="currentTicketNum"></h1>
+            <h2 style="text-align: center;font-size: 4em;color: #483D8B" id = "notServingShowText"></h2>
+            <h4 class="counter displayCounter" id="thanksOrAlert" style="color: #BEBEBE">-</h4>
+            <h4 class="lastTicket">-</h4>
+        </section>
+        <section class="grid">
+            <div>
+                <br>
+                <h2 style="font-size: 2em">- Dear Customer - </h2>
+                <h3>Please Choose Your Requirement Here</h3><br>
+                <button class="buttons clientsbuttonC" id="InsertBusiness">Business</button>
+                <button class="buttons clientsbuttonQ" id="InsertPrivate">Private</button>
+                <button class="buttons clientsbuttonP" id="InsertSenior">Senior</button>
+
+            </div>
+        </section>
+        </div>
+    </main>
+    <footer>NOMONEY BANK &copy; - No Money · No Worries </footer>
+<!--<script src="/js/dataset_bank0.js"></script>-->
+<script>
+
+InsertPrivate.onclick=function(){
+    var curWwwPath = window.document.location.href;
+    var pathName = window.document.location.pathname;
+    var localhostPath=curWwwPath.substring(0, curWwwPath.indexOf(pathName));
+    var projectName = pathName.substring(0,pathName.substr(1).indexOf('/')+1);
+    var pathName = window.document.location.pathname;
+    var apiForPushQueue = localhostPath+pathName.slice(0,11)+'/priQueue/push'
+    var xhr1=new XMLHttpRequest();
+    xhr1.open('get',apiForPushQueue)
+    xhr1.send();
+    xhr1.onload=function(){
+        //xhr对象里的responseText属性就存储着响应数据
+        if(xhr1.responseText.search("not serving") != -1 ){
+            SuccessOrNot.innerHTML = "😥 UNSUCCESSFUL"
+            notServingShowText.innerHTML = xhr1.responseText.substring(1,27);
+            currentTicketNum.innerHTML = "";
+            thanksOrAlert.innerHTML = "Please contact CRO staff."
+            console.log(xhr1.responseText)
+        }else{
+            resData = JSON.parse(xhr1.responseText)
+            currentQueueNum = resData["privateQueue"].slice(-1)
+            console.log('响应',currentQueueNum);//响应为字符串数据类型
+            //接下来就可以将数据渲染到页面中了
+            SuccessOrNot.innerHTML = "😁 SUCCESSFUL"
+            thanksOrAlert.innerHTML = "NO MONYE · NO WORRIES";
+            currentTicketNum.innerHTML = currentQueueNum;
+            notServingShowText.innerHTML = "";
+        }
+    }
+
+}
+
+InsertSenior.onclick=function(){
+    var curWwwPath = window.document.location.href;
+    var pathName = window.document.location.pathname;
+    var localhostPath=curWwwPath.substring(0, curWwwPath.indexOf(pathName));
+    var projectName = pathName.substring(0,pathName.substr(1).indexOf('/')+1);
+    var pathName = window.document.location.pathname;
+    var apiForPushQueue = localhostPath+pathName.slice(0,11)+'/senQueue/push'
+    var xhr2=new XMLHttpRequest();
+    //这个请求实际是服务器给客户端的
+    //请求对象的设置 告诉ajax对象，要向那里发送请求，以什么方式发送请求
+    xhr2.open('get',apiForPushQueue)
+    //调用xhr对象下的send方法 发送请求
+    xhr2.send();
+    //获取服务端对客户端的响应数据
+    // xhr对象的onload事件在服务器对客户端做出响应后就会触发
+    xhr2.onload=function(){
+        //xhr对象里的responseText属性就存储着响应数据
+        if(xhr2.responseText.search("not serving") != -1 ){
+            SuccessOrNot.innerHTML = "😥 UNSUCCESSFUL"
+            notServingShowText.innerHTML = xhr2.responseText.substring(1,27);
+            currentTicketNum.innerHTML = "";
+            thanksOrAlert.innerHTML = "Please contact CRO staff."
+            // console.log(xhr2.responseText)
+        }else{
+            resData = JSON.parse(xhr2.responseText)
+            currentQueueNum = resData["seniorQueue"].slice(-1)
+            // console.log('响应',currentQueueNum);//响应为字符串数据类型
+            //接下来就可以将数据渲染到页面中了
+            thanksOrAlert.innerHTML = "NO MONYE · NO WORRIES"
+            SuccessOrNot.innerHTML = "😁 SUCCESSFUL"
+            currentTicketNum.innerHTML = currentQueueNum;
+            notServingShowText.innerHTML = "";
+        }
+    }
+
+}
+
+InsertBusiness.onclick=function(){
+    var curWwwPath = window.document.location.href;
+    var pathName = window.document.location.pathname;
+    var localhostPath=curWwwPath.substring(0, curWwwPath.indexOf(pathName));
+    var projectName = pathName.substring(0,pathName.substr(1).indexOf('/')+1);
+    var pathName = window.document.location.pathname;
+    var apiForPushQueue = localhostPath+pathName.slice(0,11)+'/bizQueue/push'
+    var xhr3=new XMLHttpRequest();
+    console.log(apiForPushQueue)
+    xhr3.open('get',apiForPushQueue)
+    xhr3.send();
+    xhr3.onload=function(){
+        if(xhr3.responseText.search("not serving") != -1 ){
+            SuccessOrNot.innerHTML = "😥 UNSUCCESSFUL"
+            notServingShowText.innerHTML = xhr3.responseText.substring(1,27);
+            currentTicketNum.innerHTML = "";
+            console.log(xhr3.responseText)
+        }else{
+            resData = JSON.parse(xhr3.responseText)
+            currentQueueNum = resData.slice(-1)
+            // console.log('响应',currentQueueNum);//响应为字符串数据类型
+            //接下来就可以将数据渲染到页面中了
+            thanksOrAlert.innerHTML = "NO MONYE · NO WORRIES"
+            SuccessOrNot.innerHTML = "😁 SUCCESSFUL"
+            currentTicketNum.innerHTML = currentQueueNum;
+            notServingShowText.innerHTML = "";
+        }
+    }
+
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+    <title>Counter Page</title>
+</head>
+<body>
+    <main>
+      <header><h1><b style="font-size: 1.5em">NOMONEY BANK</b> .{{branch}}-{{counter}}</h1></header>
+        <section class="displayForCounter">
+            <h1 class="headtitle" style="font-size: 3em; color: #696969"> Now Serving </h1>
+            <h1 id = "currentServing" style = "font-size: 24em;text-align: center"></h1>
+        </section>
+        <div style="max-width: 1080px; height: 15vh; text-align: right; margin: 20px auto;">
+            <b style="font-size: 1.6em;max-width: 1060px;float: left;color: #E6E6FA;" id="counterType">For {{type}} Service</b>
+            <div class="select">
+                <select id="selectType" style="font-size: 1.5em">
+                    <option class="optionSelect" value="Business" selected>Business</option>
+                    <option class="optionSelect" value="Private">Private</option>
+                    <option class="optionSelect" value="Senior">Senior</option>
+                </select>
+            </div>
+            <button class="CounterButton" id = "nextClient">NEXT CLIENT</button>
+
+        </div>
+    </main>
+    <footer>NOMONEY BANK &copy; - No Money · No Worries </footer>
+</body>
+<script>
+// /branches/:branchID/counters/:countersID
+nextClient.onclick=function(){
+    var curWwwPath = window.document.location.href;
+    var pathName = window.document.location.pathname;
+    var localhostPath=curWwwPath.substring(0, curWwwPath.indexOf(pathName));
+    var projectName = pathName.substring(0,pathName.substr(1).indexOf('/')+3);
+    var currentCounterID = curWwwPath.slice(-1)
+    var apiForShiftQueue = projectName+"/counters/"+currentCounterID
+    console.log(apiForShiftQueue)
+    var xhr1=new XMLHttpRequest();
+    xhr1.open('get',apiForShiftQueue)
+    xhr1.send();
+    xhr1.onload=function(){
+        //xhr对象里的responseText属性就存储着响应数据
+        // currentServing
+        currentServing.innerHTML = xhr1.responseText.replaceAll("\"","")
+    }
+
+}
+
+
+$(document).on("change","#selectType",function(){
+                var curWwwPath = window.document.location.href;
+                var pathName = window.document.location.pathname;
+                var localhostPath=curWwwPath.substring(0, curWwwPath.indexOf(pathName));
+                var projectName = pathName.substring(0,pathName.substr(1).indexOf('/')+3);
+                var currentCounterID = curWwwPath.slice(-1);
+                var type = $("#selectType option:selected").val();
+                console.log("type"+type)
+                if(type == "Private"){
+                    type = "/setTypeP";
+                }else{
+                    if(type == "Senior"){
+                        console.log("ssucc")
+                        type = "/setTypeS"
+                    }else{ type = "/setTypeB" }
+                };
+				$.ajax({
+
+					url: projectName+type+"/counter/"+ currentCounterID, //回传二级下拉框数据的后台方法URL
+					success: function(data) {
+                        if(data == "B"){
+                            console.log("BBB")
+                            counterType.innerHTML = "For Business Service";
+                        }
+                        if(data == "P"){
+                            console.log("PPP")
+                            counterType.innerHTML = "For Private Service";
+                        }
+                        // else{
+                        //     console.log(data)
+                        // }
+                        if(data == "S"){
+                            counterType.innerHTML = "For Senior Service";
+                        }
+
+
+					}
+				});
+    });
+
+</script>
+</html>

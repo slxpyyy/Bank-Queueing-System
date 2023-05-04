@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="refresh" content="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRO</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+
+    </style>
+    <!-- <script src=".lib/jquery.js"></script> -->
+</head>
+<body>
+    <main>
+        <header><h1><b style="font-size: 1.5em">NOMONEY BANK</b> .{{title}}</h1></header>
+        <!-- This is for all waiting clientID in specif queues and have function to stop or restart the Queue -->
+
+        <div class="holdQueueCRO">
+            <h1 style="font-size: 2.2em; color: #483D8B; font-weight: bold">- Queue Condition -</h1>
+            <table class="CROTable">
+                <tbody>
+                    <tr>
+                        <td class="QueueDisplay" id="SenQ" style="font-weight: bold;color:#00008B">Senior</td>
+                        <td class="QueueDisplay_num" id="SeniorQueue">-</td>
+                        <td class="buttonsCell"><button class="CROButtons" id="btnStartSen">Start</button>
+                            <button class="CROButtons" id="btnStopSen">Stop</button></td>
+                    </tr>
+                    <tr>
+                        <td class="QueueDisplay" id="BizQ" style="font-weight: bold;color: #00008B">Business</td>
+                        <td class="QueueDisplay_num" id="BizQueue">-</td>
+                        <td class="buttonsCell"><button class="CROButtons" id="btnStartBiz">Start</button>
+                            <button class="CROButtons" id="btnStopBiz">Stop</button></td>
+                    </tr>
+                    <tr>
+                        <td class="QueueDisplay" id="PriQ" style="font-weight: bold;color: #00008B">Private</td>
+                        <td class="QueueDisplay_num" id="PriQueue">-</td>
+                        <td class="buttonsCell"><button class="CROButtons" id="btnStartPri">Start</button>
+                            <button class="CROButtons" id="btnStopPri">Stop</button></td>
+                    </tr>
+                    <tr>
+                        <td class="QueueDisplay" id="original" style="font-weight: bolder;color: #00008B">Missing</td>
+                        <td class="QueueDisplay_num" id="MissingQDisplay">--</td>
+<!--                        <td class="buttonsCell" >&#45;&#45;</td>-->
+                    </tr>
+
+                </tbody>
+            </table>
+
+        </div>
+        <div class="displayAllBranch">
+            <h1 style="font-size: 2.2em; color: #483D8B; font-weight: bold;margin-top: 15px; margin-bottom: -8px;">- Total Service -</h1>
+            <table class = "displayAllTable">
+                <thead>
+                    <tr class="displayAll">
+                        <th class="displayAll">Service</th>
+                        <th class="displayAll">NUM</th>
+                        <th class="displayAll">TOTAL SERVE</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="displayAll">
+                        <td class="displayAll">Business</td>
+                        <td id = "P_1" class="displayAll">{{bizNum}}</td>
+                        <td class="displayAll" id = "sumUp" rowspan="3" style="font-size: 9em;">{{whole}}</td>
+                    </tr>
+                    <tr class="displayAll">
+                        <td class="displayAll" style="background-color: #E6E6FA">Senior</td>
+                        <td class="displayAll" style="background-color: #E6E6FA" id = "P_2">{{senNum}}</td>
+                    </tr>
+                    <tr class="displayAll">
+                        <td class="displayAll">Private</td>
+                        <td class="displayAll" id = "P_3">{{priNum}}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+        </div>
+
+        <div class="displayForAllServing">
+            <h2>NO MONEY NO WORRIES</h2>
+            <h1 style="font-size: 2.2em; color: #fff; font-weight: bold;margin: 5px 10px 20px 10px">- All NowServing -</h1>
+            <div id="CounterNowServing"></div>
+
+        </div>
+
+
+        </section>
+    </main>
+
+
+
+<script>
+//missingQueue
+window.addEventListener("load", function() {
+    var curWwwPath = window.document.location.href;
+    var branchID = parseInt(curWwwPath.slice(35))
+
+    fetch( "http://localhost:3000/branches/"+ branchID + '/missingQueue')
+        .then(response => response.json())
+        .then(data => {
+
+        original = []
+        for (let i = 0; i < data.length; i++) {
+            original.push(data[i][0])}
+
+        console.log(original)
+
+        document.getElementById("MissingQDisplay").innerHTML = original.length; //
+            });
+        });
+
+
+
+
+
+//for all now serving
+// '/:branchID/counters'
+window.addEventListener("load", function() {
+        var curWwwPath = window.document.location.href;   
+        var branchID = curWwwPath.slice(35) 
+        //     var xhr1=new XMLHttpRequest();
+        fetch( "http://localhost:3000/branches/"+ branchID + '/counters' ) 
+
+          .then(response => response.json())
+          .then(data => {
+
+            console.log(data)
+            
+             })
+        .catch(error => console.error(error))
+             
+});
+
+
+
+
+
+//for all queue display
+window.addEventListener("load", function() {
+        var curWwwPath = window.document.location.href;   
+        var branchID = curWwwPath.slice(35) 
+        //     var xhr1=new XMLHttpRequest();
+        fetch( "http://localhost:3000/branches/"+ branchID + '/priQueue' )
+            .then(response => response.json())
+            .then(data => {
+            count_Num = Object.keys(data).length
+            document.getElementById("PriQueue").innerHTML = JSON.stringify(count_Num);
+             })
+            .catch(error => console.error(error))
+          });
+
+
+
+// show bizqueue
+window.addEventListener("load", function() {
+        var curWwwPath = window.document.location.href;   
+        var branchID = curWwwPath.slice(35) 
+        //     var xhr1=new XMLHttpRequest();
+        fetch( "http://localhost:3000/branches/"+ branchID + '/bizQueue' )
+          .then(response => response.json())
+          .then(data => {
+            count_Num = Object.keys(data).length
+            document.getElementById("BizQueue").innerHTML = JSON.stringify(count_Num);
+             })
+        .catch(error => console.error(error))
+          });
+    
+// show senior queue
+    window.addEventListener("load", function() {
+        var curWwwPath = window.document.location.href;   
+        var branchID = curWwwPath.slice(35) 
+        //     var xhr1=new XMLHttpRequest();
+        fetch( "http://localhost:3000/branches/"+ branchID + '/senQueue' ) //
+          .then(response => response.json())
+          .then(data => {
+            count_Num = Object.keys(data).length
+            document.getElementById("SeniorQueue").innerHTML = JSON.stringify(count_Num); //
+             })
+        .catch(error => console.error(error))
+          });
+
+
+
+
+// Buttons for Stop and Start Queue
+btnStartSen.onclick=function(){
+    alert("Senior Queue has been started")
+    var curWwwPath = window.document.location.href;   //http://localhost:3000/CRO/branches/1
+    var branchID = curWwwPath.slice(35) //1
+    var xhr1=new XMLHttpRequest(); //douyaoxie
+    xhr1.open('get',"http://localhost:3000/branches/"+ branchID + '/senQueue/start')
+    xhr1.send();  //douyaoxie
+    xhr1.onload=function(){  //douyaoxie
+        //xhr对象里的responseText属性就存储着响应数据
+        resData = JSON.parse(xhr1.responseText)  //
+        // currentQueueNum = resData["privateQueue"].slice(-1)
+        status = resData.status.sen   
+        console.log('Senior Queue has already changed the status as',status);//响应为字符串数据类型
+        //接下来就可以将数据渲染到页面中了
+        // btnStartSen.innerHTML = status;
+
+    }
+}
+
+btnStopSen.onclick=function(){
+    alert("Senior Queue has been stopped") //
+    var curWwwPath = window.document.location.href;   
+    var branchID = curWwwPath.slice(35) 
+    var xhr1=new XMLHttpRequest();
+    xhr1.open('get',"http://localhost:3000/branches/"+ branchID + '/senQueue/stop')  //
+    xhr1.send();
+    xhr1.onload=function(){
+        resData = JSON.parse(xhr1.responseText)
+        btnStopSen = resData.status.sen 
+        console.log('Senior Queue has already changed the status as',btnStopSen); 
+
+    }
+}
+
+btnStartBiz.onclick=function(){
+    alert("Business Queue has been started") //
+    var curWwwPath = window.document.location.href;   
+    var branchID = curWwwPath.slice(35) 
+    var xhr1=new XMLHttpRequest();
+    xhr1.open('get',"http://localhost:3000/branches/"+ branchID + '/bizQueue/start')  //
+    xhr1.send();
+    xhr1.onload=function(){
+        resData = JSON.parse(xhr1.responseText)
+        btnStartBiz = resData.status.biz //
+        console.log('Business Queue has already changed the status as',btnStartBiz); //
+
+    }
+}
+
+btnStopBiz.onclick=function(){
+    alert("Business Queue has been stopped") //
+    var curWwwPath = window.document.location.href;  
+    var branchID = curWwwPath.slice(35) 
+    var xhr1=new XMLHttpRequest();
+    xhr1.open('get',"http://localhost:3000/branches/"+ branchID + '/bizQueue/stop') //
+    xhr1.send();
+    xhr1.onload=function(){
+        resData = JSON.parse(xhr1.responseText)
+        btnStopBiz = resData.status.biz //
+        console.log('Business Queue has already changed the status as',btnStopBiz); //
+     }
+}
+
+btnStartPri.onclick=function(){
+    alert("Private Queue has been started") //
+    var curWwwPath = window.document.location.href;   
+    var branchID = curWwwPath.slice(35) 
+    var xhr1=new XMLHttpRequest();
+    xhr1.open('get',"http://localhost:3000/branches/"+ branchID + '/priQueue/start')  //
+    xhr1.send();
+    xhr1.onload=function(){
+        resData = JSON.parse(xhr1.responseText)
+        status = resData.status.pri //
+        console.log('Private Queue has already changed the status as',status); //
+    }
+}
+
+btnStopPri.onclick=function(){
+    alert("Private Queue has been stopped") //
+    var curWwwPath = window.document.location.href;   
+    var branchID = curWwwPath.slice(35) 
+    var xhr1=new XMLHttpRequest();
+    xhr1.open('get',"http://localhost:3000/branches/"+ branchID + '/priQueue/stop')  //
+    xhr1.send();
+    xhr1.onload=function(){
+        resData = JSON.parse(xhr1.responseText)
+        status = resData.status.pri //
+        console.log('Private Queue has already changed the status as',status); //
+    }
+}
+
+
+//for all now serving
+// '/:branchID/counters'
+window.addEventListener("load", function() {
+        var curWwwPath = window.document.location.href;
+        var branchID = curWwwPath.slice(35)
+        //     var xhr1=new XMLHttpRequest();
+        fetch( "http://localhost:3000/branches/"+ branchID + '/counters' )
+
+          .then(response => response.json())
+          .then(data => {
+
+            console.log(data)
+            counterNow = []
+
+            for (let i = 0; i < data.length; i++) {
+
+                counterNow.push('· Counter '+ data[i].counterID + ' is serving '+ data[i].counterServing + " &nbsp;&nbsp; ")}
+
+            console.log(counterNow)
+
+            for(var i=0; i<counterNow.length; i++){
+                document.getElementById("CounterNowServing").innerHTML +="<b>"+counterNow[i]+"</b>";
+            }
+
+             })
+           .catch(error => console.error(error))
+
+          });
+
+
+
+
+
+
+
+
+
+
+</script>
+</body>
+</html>

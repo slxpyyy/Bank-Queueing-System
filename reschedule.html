@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>resechedule</title>
+
+    <!-- <script src=".lib/jquery.js"></script> -->
+</head>
+<body>
+    <main>
+        <header><h1><b style="font-size: 1.5em">NOMONEY BANK</b> .{{title}}</h1></header>
+
+        <div class="rescheduleCard">
+            <div class="content">
+                <h2>NO MONEY NO WORRIES</h2>
+                <h3>RESCHEDULE HERE</h3>
+                <h3>------------------------</h3>
+                <br>
+                <br>
+                <label for="OriginalID" style="margin-left: -11vw; font-size: 1.5em;color: rgba(255,255,255,0.64)">Type the OriginalID:</label>
+                <form id = rescheduleOperation>
+
+                    <input type="text" id="originalID" name="originalID">
+                    <button type="submit" id="Reschedule"  >Reschedule</button>
+                    <br>
+                </form>
+                <br>
+                <br>
+                <br>
+                <table class="rescheduleTable">
+                    <tbody style="background-color: transparent">
+                        <tr>
+                            <td class="rescheduleDisplay" id="original">Original ID</td>
+                            <td class="rescheduleDisplay" id="MissingQDisplay">-</td>
+                        </tr>
+                        <tr>
+                            <td class="rescheduleDisplay" id="resechdule">Reschedule ID</td>
+                            <td class="rescheduleDisplay" id="rescheduleID">-</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+
+
+
+
+    </main>
+<script>
+
+
+
+document.getElementById("rescheduleOperation").addEventListener("submit", function(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    InputID = formData.get("originalID");
+    console.log(InputID)
+    localStorage.setItem("InputID", InputID)
+    // Your form submit logic here
+
+    var curWwwPath = window.document.location.href;   
+    // var originalID = curWwwPath.slice(55)  
+    const originalID = localStorage.getItem("InputID")
+    var branchID = curWwwPath.slice(42)
+    fetch( "http://localhost:3000/branches/"+ branchID + '/reschedule/' + originalID)
+        .then(response => response.json())
+        .then(data => {
+
+
+        originaldisplay = data[0]
+        rescheduleID = data[1]
+
+        document.getElementById("MissingQDisplay").innerHTML = originaldisplay
+        document.getElementById("rescheduleID").innerHTML = rescheduleID; })
+        .catch(error => console.error(error))
+
+});
+
+
+
+
+
+
+
+
+
+
+//for queue display
+//for all queue display
+window.addEventListener("load", function() {
+        var curWwwPath = window.document.location.href;   
+        var branchID = curWwwPath.slice(42,43) //
+        fetch( "http://localhost:3000/branches/"+ branchID + '/priQueue' )
+          .then(response => response.json())
+          .then(data => {
+            document.getElementById("PriQueue").innerHTML = JSON.stringify(data);
+             })
+          .catch(error => console.error(error));
+          });
+
+
+
+// show bizqueue
+window.addEventListener("load", function() {
+        var curWwwPath = window.document.location.href;   
+        var branchID = curWwwPath.slice(42,43)//
+        fetch( "http://localhost:3000/branches/"+ branchID + '/bizQueue' )
+          .then(response => response.json())
+          .then(data => {
+            document.getElementById("BizQueue").innerHTML = JSON.stringify(data);
+             })
+          .catch(error => console.error(error))
+          });
+    
+// show senior queue
+    window.addEventListener("load", function() {
+        var curWwwPath = window.document.location.href;   
+        var branchID = curWwwPath.slice(42,43)
+        fetch( "http://localhost:3000/branches/"+ branchID + '/senQueue' ) //
+          .then(response => response.json())
+          .then(data => {
+            document.getElementById("SeniorQueue").innerHTML = JSON.stringify(data); //
+             })
+          .catch(error => console.error(error))
+          });
+
+
+
+</script>
+</body>
+</html>
+
+
+
+
+
