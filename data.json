@@ -1,0 +1,13 @@
+[{"branchID":1,"branchName":"Jurong East",
+"queuenumber":{"biznumber":0,"prinumber":0,"senmber":0},
+"branchCounter":[
+    {"counterID":1,"Type":"B","currentID":"B-33","counterServing":"B-33"},
+    {"counterID":2,"counterServing":"B-13","Type":"B","currentID":"B-13"}],
+"businessQueue":["B-1"],
+"privateQueue":["P-1"],
+"seniorQueue":["S-1"],
+"missingQueue":[],
+"status":{"biz":1,"pri":1,"sen":1},
+"nowserve":[
+{"counterID":"1","servenumber":"B-1"}]},
+{"branchID":2,"branchName":"Jurong West","queuenumber":{"biznumber":4,"prinumber":4,"senmber":4},"branchCounter":[{"counterID":1,"counterServing":"","Type":"","currentID":""},{"counterID":2,"counterServing":"","Type":"","currentID":""}],"businessQueue":["B-1","B-2","B-3","B-4","B-5","B-6"],"privateQueue":["P-1","P-2","P-3","P-4"],"seniorQueue":["S-1","S-2","S-3","S-4"],"missingQueue":[["B-69","B-3"],["B-69","B-4"],["B-69","B-5"]],"status":{"biz":1,"pri":1,"sen":1},"nowserve":[{"counterID":" ","servenumber":" "},{"counterID":" ","servenumber":" "},{"counterID":" ","servenumber":" "}]}]
